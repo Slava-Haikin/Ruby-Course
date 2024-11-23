@@ -6,8 +6,12 @@ class Station
     @trains = []
   end
 
-  def add_train(train)
+  def receive_train(train)
     @trains.push(train)
+  end
+
+  def dispatch_train
+    @trains.pop
   end
 
   def get_train_list_by_type(type)
@@ -18,9 +22,5 @@ class Station
       @trains.filter
     else
       "Error: type has an invalid value (#{type})"
-  end
-
-  def dispatch_train
-    @trains.pop
   end
 end

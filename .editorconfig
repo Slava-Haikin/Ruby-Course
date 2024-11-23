@@ -1,0 +1,12 @@
+root = true
+
+[*] # Настройки для всех файлов
+charset = utf-8           # Кодировка UTF-8
+end_of_line = lf          # Символ конца строки: LF (Linux/Unix)
+indent_style = space      # Использовать пробелы вместо табуляции
+indent_size = 2           # Отступ в 2 пробела, стандарт для Ruby
+trim_trailing_whitespace = true # Удалять пробелы в конце строк
+insert_final_newline = true     # Вставлять пустую строку в конце файла
+
+[*.rb] # Настройки для файлов Ruby
+indent_size = 2           # Убедимся, что для Ruby — 2 пробела
