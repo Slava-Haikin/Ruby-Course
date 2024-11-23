@@ -40,6 +40,11 @@ class Train
     end
   end
 
+  def set_route(route)
+    @route = route
+    @route_station_index = 0 if route
+  end
+
   def accelerate(acceleration)
     @speed += acceleration
   end
