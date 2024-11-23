@@ -20,7 +20,11 @@ class Route
       @stations.delete(station)
   end
 
-  def show_station_list
+  def get_station_list
     [@starting_station, *@stations, @final_station]
+  end
+
+  def show_station_list
+    puts [@starting_station, *@stations, @final_station]
   end
 end
