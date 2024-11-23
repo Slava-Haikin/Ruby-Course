@@ -1,4 +1,26 @@
 class Station
-  attr_
+  attr_reader :trains
+
   def initialize(station_name)
     @station_name = station_name
+    @trains = []
+  end
+
+  def add_train(train)
+    @trains.push(train)
+  end
+
+  def get_train_list_by_type(type)
+    case type
+    when 'passenger'
+      @trains.filter
+    when 'freight'
+      @trains.filter
+    else
+      "Error: type has an invalid value (#{type})"
+  end
+
+  def dispatch_train
+    @trains.pop
+  end
+end
