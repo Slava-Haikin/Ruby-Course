@@ -24,10 +24,11 @@ class Station
   def get_train_list_by_type(type)
     case type
     when 'passenger'
-      @trains.filter
+      @trains.select { |train| train.type == 'passenger' }
     when 'freight'
-      @trains.filter
+      @trains.select { |train| train.type == 'freight' }
     else
-      "Error: type has an invalid value (#{type})"
+      raise ArgumentError, "Invalid train type: #{type}"
+    end
   end
 end
