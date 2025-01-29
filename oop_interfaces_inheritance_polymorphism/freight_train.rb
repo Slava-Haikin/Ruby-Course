@@ -1,3 +1,0 @@
-class FreightTrain < Train
-
-end
