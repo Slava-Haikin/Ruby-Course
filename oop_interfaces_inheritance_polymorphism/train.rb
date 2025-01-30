@@ -25,19 +25,14 @@ class Train
   attr_reader :wagons
   attr_writer :route
 
-  def initialize(train_number, type)
+  def initialize(train_number, type = nil)
     @train_number = train_number
-    @type = nil
+    @type = type
     @route = nil
     @wagons = 0
     @speed = 0
     @route_station_index = 0
 
-    if ['cargo', 'passenger'].include?(type)
-      @type = type
-    else
-      raise "Error: Train can be only Freight or Passenger"
-    end
   end
 
   def set_route(route)
@@ -53,28 +48,22 @@ class Train
     @speed = 0
   end
 
-  def attach_wagon
-    if @speed == 0
+  def attach_wagon(wagon)
+      raise "Error: Cannot attach wagon while train is moving" unless @speed.zero?
+      raise "Error: Wagon type mismatch" unless wagon.respond_to?(:type) && wagon.type == @type
+
       @wagons += 1
-    else
-      raise "Error: Cannot attach wagon while train is moving"
     end
   end
 
   def detach_wagon
-    if @speed == 0 && @wagons > 0
-      @wagons -= 1
-    else
-      raise "Error: Cannot detach wagon while train is moving or no wagons to detach"
-    end
+    raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? || @wagons.positive?
+
+    @wagons -= 1
   end
 
   def current_station
-    if @route
-      @route.show_station_list[@route_station_index]
-    else
-      nil
-    end
+    @route&.show_station_list[@route_station_index]
   end
 
   def next_station
