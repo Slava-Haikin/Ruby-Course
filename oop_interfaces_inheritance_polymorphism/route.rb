@@ -1,5 +1,5 @@
 # Класс Route (Маршрут):
-# Имеет начальную и конечную станцию, а также список промежуточных станций. 
+# Имеет начальную и конечную станцию, а также список промежуточных станций.
 # Начальная и конечная станции указываются при создании маршрута, а промежуточные могут добавляться между ними.
 # Может добавлять промежуточную станцию в список
 # Может удалять промежуточную станцию из списка
@@ -20,11 +20,15 @@ class Route
       @stations.delete(station)
   end
 
-  def get_station_list
+  def get_stations_list
     [@starting_station, *@stations, @final_station]
   end
 
-  def show_station_list
+  def show_stations_list
     puts [@starting_station, *@stations, @final_station]
+  end
+
+  def show_station_by_index(index)
+    puts stations[index]
   end
 end

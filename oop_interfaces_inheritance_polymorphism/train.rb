@@ -1,24 +1,5 @@
-# Класс Train (Поезд):
-
-# Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов,
-# эти данные указываются при создании экземпляра класса
-
-# Может набирать скорость
-# Может возвращать текущую скорость
-# Может тормозить (сбрасывать скорость до нуля)
-# Может возвращать количество вагонов
-
-# Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто
-# увеличивает или уменьшает количество вагонов). Прицепка/отцепка вагонов может
-# осуществляться только если поезд не движется.
-
-# Может принимать маршрут следования (объект класса Route).
-# При назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте.
-
-# Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед
-# и назад, но только на 1 станцию за раз.
-
-# Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
+# Вагоны теперь делятся на грузовые и пассажирские (отдельные классы). К пассажирскому поезду можно прицепить только пассажирские,
+# к грузовому - грузовые.
 
 class Train
   attr_accessor :speed
@@ -32,7 +13,6 @@ class Train
     @wagons = 0
     @speed = 0
     @route_station_index = 0
-
   end
 
   def set_route(route)
@@ -49,11 +29,10 @@ class Train
   end
 
   def attach_wagon(wagon)
-      raise "Error: Cannot attach wagon while train is moving" unless @speed.zero?
-      raise "Error: Wagon type mismatch" unless wagon.respond_to?(:type) && wagon.type == @type
+    raise "Error: Cannot attach wagon while train is moving" unless @speed.zero?
+    raise "Error: Wagon type mismatch" unless wagon.respond_to?(:type) && wagon.type == @type
 
-      @wagons += 1
-    end
+    @wagons += 1
   end
 
   def detach_wagon
@@ -63,28 +42,24 @@ class Train
   end
 
   def current_station
-    @route&.show_station_list[@route_station_index]
+    @route&.show_stations_list[@route_station_index]
   end
 
   def next_station
-    if @route && @route_station_index < @route.show_station_list.length - 1
-      @route.show_station_list[@route_station_index + 1]
-    else
-      nil
-    end
+    station_list = @route.get_stations_list
+    last_station_index = station_list.positive ? @route.show_stations_list.length : @route.show_stations_list.length - 1
+
+     @route.show_station_by_index[@route_station_index + 1] if @route_station_index < last_station_index
   end
 
   def previous_station
-    if @route && @route_station_index > 0
-      @route.show_station_list[@route_station_index - 1]
-    else
-      nil
-    end
+    @route&.show_stations_list[@route_station_index - 1] if @route_station_index.positive?
   end
 
   def move_forward
     raise "Error: No route assigned" unless @route
-    if @route_station_index < @route.show_station_list.length - 1
+
+    if @route_station_index < @route.show_stations_list.length - 1
       @route_station_index += 1
     else
       raise "Error: No more stations to move forward"
