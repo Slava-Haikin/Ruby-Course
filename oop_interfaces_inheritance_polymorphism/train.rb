@@ -1,5 +1,4 @@
-# Вагоны теперь делятся на грузовые и пассажирские (отдельные классы). К пассажирскому поезду можно прицепить только пассажирские,
-# к грузовому - грузовые.
+# Вагоны теперь делятся на грузовые и пассажирские (отдельные классы). К пассажирскому - только пассажирские, к грузовому - грузовые.
 
 class Train
   attr_accessor :speed
@@ -10,7 +9,7 @@ class Train
     @train_number = train_number
     @type = type
     @route = nil
-    @wagons = 0
+    @wagons = []
     @speed = 0
     @route_station_index = 0
   end
@@ -32,17 +31,17 @@ class Train
     raise "Error: Cannot attach wagon while train is moving" unless @speed.zero?
     raise "Error: Wagon type mismatch" unless wagon.respond_to?(:type) && wagon.type == @type
 
-    @wagons += 1
+    @wagons << wagon
   end
 
   def detach_wagon
     raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? || @wagons.positive?
 
-    @wagons -= 1
+    @wagons.pop
   end
 
   def current_station
-    @route&.show_stations_list[@route_station_index]
+    @route&.show_station_by_number[@route_station_index]
   end
 
   def next_station
