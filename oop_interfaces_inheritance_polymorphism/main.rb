@@ -29,6 +29,7 @@ class App
     execute_command(signal)
   end
 
+  private
   def show_main_menu
     puts '
       Welcome to the dispatch center.
@@ -51,12 +52,20 @@ class App
   end
 
   def execute_command(signal)
-    puts signal
+    case signal
+    when '1' || 's'
+      puts 'Input station name and/or press enter'
+      name = gets.chomp
+
+      create_station(name.empty? ? random_station_name : name)
+      print @available_stations
+      start
+    end
   end
 
-  # def create_station()
-
-  # end
+  def create_station(name)
+    @available_stations << Station.new(name)
+  end
 
   # def create_train()
 
@@ -66,10 +75,19 @@ class App
 
   # end
 
-  # private
-  # def generate_random_stations()
+  def random_station_name
+    prefixes = [
+      "Central", "Grand", "Union", "City", "Metro", "North", "South", "East", "West", "Main"
+    ]
+    suffixes = [
+      "Station", "Terminal", "Depot", "Stop", "Hub"
+    ]
 
-  # end
+    prefix = prefixes.sample
+    suffix = suffixes.sample
+
+    "#{prefix} #{suffix}"
+  end
 end
 
 app = App.new
