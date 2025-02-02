@@ -26,52 +26,47 @@ class App
   end
 
   def start()
-    show_main_menu
-    signal = get_user_input
-    execute_main_menu_command(signal)
+    first_run = true
+    loop do
+      unless first_run
+        get_user_input 'To continue press "Enter"'
+      end
+
+      show_menu
+      signal = get_user_input 'Enter your command:'
+      execute_menu_command(signal)
+      first_run = false
+    end
   end
 
   private
-  def show_main_menu
+  def show_menu
     puts '
       Welcome to the dispatch center.
 
-      1. Create [s]tation
-      2. Create [t]rain
-      3. Create [r]oute
-      4. Modif[y] route
-      5. Set [u]p train route
-      6. [A]ttach wagon
-      7. [D]etach wagon
-      8. [M]ove train
-      9. Show station [l]ist
+      1.  Create [s]tation
+      2.  Create [t]rain
+      3.  Create [r]oute
+      4.  Modif[y] route
+      5.  Set [u]p train route
+      6.  [A]ttach wagon
+      7.  [D]etach wagon
+      8.  [M]ove train
+      9.  Show station [l]ist
       10. Show trains list [o]n the station
+      0.  [E]xit
     '
   end
 
-  def get_user_input()
-    puts 'Waiting for your command (Number of list item/Hotkey):'
+  def get_user_input(message)
+    puts message
     gets.chomp
   end
 
-  def execute_main_menu_command(signal)
+  def execute_menu_command(signal)
     case signal
-    when '1', 's', 'create station'
-      puts 'Input station name and/or press enter'
-      station_name = gets.chomp
-      create_station(station_name.empty? ? random_station_name : station_name)
-
-      print_indexed_list(@stations)
-
-      start
-    when '2', 't', 'create train'
-      puts 'Input train type (cargo/passenger) and press enter'
-      train_type = gets.chomp
-      create_train(train_type, rand(1_000_000))
-
-      print_indexed_list(@trains)
-
-      start
+    when '1', 's', 'create station' then create_station
+    when '2', 't', 'create train' then create_train
     when '3', 'r', 'create route'
       puts 'Choose starting station number and press enter'
       print_indexed_list(@stations)
@@ -143,16 +138,33 @@ class App
 
       print_indexed_list(modifying_route.get_stations_list)
       start
+    when '5', 'y', 'set route'
+
+    when '6', 'y', 'attach wagon'
+    when '7', 'y', 'detach wagon'
+    when '8', 'm', 'move train'
+    when '9', 'l', 'stations list'
+    when '10', 'o', 'trains list'
+    when '0', 'E' then exit
     end
   end
 
-  def create_station(name)
-    @stations << Station.new(name)
+  def create_station()
+    station_name = get_user_input('Input station name and/or press enter:')
+
+    @stations << Station.new(station_name.empty? ? random_station_name : station_name)
+
+    print_indexed_list(@stations, 'New stations list:')
   end
 
-  def create_train(type, number)
-    newTrain = type == 'cargo' ? CargoTrain.new(number) : PassengerTrain.new(number)
+  def create_train()
+    train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
+    train_number = rand(1_000_000)
+
+    newTrain = train_type == 'cargo' ? CargoTrain.new(train_number) : PassengerTrain.new(train_number)
     @trains << newTrain
+
+    print_indexed_list(@trains, 'New train list:')
   end
 
   def create_route(starting_station, final_station)
@@ -174,11 +186,17 @@ class App
     "#{prefix} #{suffix}"
   end
 
-  def print_indexed_list(array)
+  def print_indexed_list(array, message)
+    if (message)
+      puts message
+    end
+
+    puts "=======================\n"
     array.each_with_index do |item, index|
       identifier = item.respond_to?(:name) ? item.name : item.number
       puts "#{index}. #{identifier}"
     end
+    puts "=======================\n\n\n"
   end
 end
 
