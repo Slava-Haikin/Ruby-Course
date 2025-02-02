@@ -9,6 +9,7 @@
 
 class Route
   def initialize(starting_station, final_station)
+    @name = '#{starting_station} - #{final_station}'
     @starting_station = starting_station
     @final_station = final_station
     @stations = []

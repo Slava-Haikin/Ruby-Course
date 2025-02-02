@@ -10,6 +10,8 @@
  - Просматривать список станций и список поездов на станции
 =end
 
+# Только start является публичным интферфейсом, потому что все остальное это реализация, но не интерфейс который доступен извне
+
 require_relative 'train'
 require_relative 'route'
 require_relative 'station'
@@ -18,15 +20,15 @@ require_relative 'passenger_train'
 
 class App
   def initialize()
-    @train = nil
-    @route = nil
-    @available_stations = []
+    @routes = []
+    @trains = []
+    @stations = []
   end
 
   def start()
     show_main_menu
     signal = get_user_input
-    execute_command(signal)
+    execute_main_menu_command(signal)
   end
 
   private
@@ -42,7 +44,7 @@ class App
       6. [D]etach wagon
       7. [M]ove train
       8. Show station [l]ist
-      9. Show train list [o]n the station
+      9. Show trains list [o]n the station
     '
   end
 
@@ -51,29 +53,40 @@ class App
     gets.chomp
   end
 
-  def execute_command(signal)
+  def execute_main_menu_command(signal)
+    puts signal
     case signal
-    when '1' || 's'
+    when '1', 's', 'create station'
       puts 'Input station name and/or press enter'
-      name = gets.chomp
+      station_name = gets.chomp
+      create_station(station_name.empty? ? random_station_name : station_name)
 
-      create_station(name.empty? ? random_station_name : name)
-      print @available_stations
+      print "\n #{@stations} \n"
+
+      start
+    when '2', 't', 'create train'
+      puts 'Input train type (cargo/passenger) and press enter'
+      train_type = gets.chomp
+      create_train(train_type, rand(1_000_000))
+
+      print "\n #{@trains} \n"
+
       start
     end
   end
 
   def create_station(name)
-    @available_stations << Station.new(name)
+    @stations << Station.new(name)
   end
 
-  # def create_train()
+  def create_train(type, number)
+    newTrain = type == 'cargo' ? CargoTrain.new(number) : PassengerTrain.new(number)
+    @trains << newTrain
+  end
 
-  # end
-
-  # def create_route_with_stations()
-
-  # end
+  def create_route(starting_station, final_Station)
+    new
+  end
 
   def random_station_name
     prefixes = [
