@@ -8,8 +8,10 @@
 =end
 
 class Route
+  attr_reader :name, :stations
+
   def initialize(starting_station, final_station)
-    @name = '#{starting_station} - #{final_station}'
+    @name = "#{starting_station&.name} - #{final_station&.name}"
     @starting_station = starting_station
     @final_station = final_station
     @stations = []

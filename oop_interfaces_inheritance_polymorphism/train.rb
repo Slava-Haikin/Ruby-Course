@@ -2,11 +2,11 @@
 
 class Train
   attr_accessor :speed
-  attr_reader :wagons
+  attr_reader :wagons, :number
   attr_writer :route
 
-  def initialize(train_number, type = nil)
-    @train_number = train_number
+  def initialize(number, type = nil)
+    @number = number
     @type = type
     @route = nil
     @wagons = []
@@ -66,10 +66,8 @@ class Train
   end
 
   def move_backward
-    if @route && @route_station_index > 0
-      @route_station_index -= 1
-    else
-      raise "Error: No previous station to move backward"
-    end
+    raise "Error: No previous station to move backward" unless route || @route_station_index.positive?
+
+    @route_station_index -= 1
   end
 end

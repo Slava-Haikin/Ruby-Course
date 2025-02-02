@@ -2,7 +2,7 @@
 # который будет содержать общие методы и свойства
 
 class CargoTrain < Train
-    def initialize(train_number)
-      super(train_number, 'cargo')
+    def initialize(number)
+      super(number, 'cargo')
     end
 end
