@@ -29,10 +29,6 @@ class Route
     [@starting_station, *@stations, @final_station]
   end
 
-  def show_stations_list
-    puts [@starting_station, *@stations, @final_station]
-  end
-
   def show_station_by_number(number)
     raise ArugmentError unless number.positive?
 

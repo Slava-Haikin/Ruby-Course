@@ -35,7 +35,7 @@ class Train
   end
 
   def detach_wagon
-    raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? || @wagons.positive?
+    raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? || @wagons.length.positive?
 
     @wagons.pop
   end
@@ -45,20 +45,25 @@ class Train
   end
 
   def next_station
+    return unless @route
+
     station_list = @route.get_stations_list
-    last_station_index = station_list.positive ? @route.show_stations_list.length : @route.show_stations_list.length - 1
+    stations_list_length = @route.length
+    last_station_index = station_list.positive ? stations_list_length.positive? : stations_list_length - 1
 
      @route.show_station_by_index[@route_station_index + 1] if @route_station_index < last_station_index
   end
 
   def previous_station
-    @route&.show_stations_list[@route_station_index - 1] if @route_station_index.positive?
+    return unless @route && @route_station_index.positive?
+
+    @route.get_stations_list[@route_station_index - 1] if @route_station_index.positive?
   end
 
   def move_forward
     raise "Error: No route assigned" unless @route
 
-    if @route_station_index < @route.show_stations_list.length - 1
+    if @route_station_index < @route.get_stations_list.length - 1
       @route_station_index += 1
     else
       raise "Error: No more stations to move forward"
