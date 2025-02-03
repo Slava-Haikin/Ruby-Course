@@ -69,13 +69,15 @@ class App
     when '2', 't', 'create train' then create_train
     when '3', 'r', 'create route' then create_route
     when '4', 'y', 'modify route' then modify_route
-    when '5', 'y', 'set route' then set_train_route
-    when '6', 'y', 'attach wagon' then attach_wagon
-    when '7', 'y', 'detach wagon' then detach_wagon
+    when '5', 'u', 'set route' then set_train_route
+    when '6', 'a', 'attach wagon' then attach_wagon
+    when '7', 'd', 'detach wagon' then detach_wagon
     when '8', 'm', 'move train' then move_train
     when '9', 'l', 'stations list' then stations_list
     when '10', 'o', 'trains list' then trains_list
     when '0', 'E' then exit
+    else
+      puts 'Unknown command, please try again'
     end
   end
 
@@ -178,7 +180,7 @@ class App
 
     print_list(@routes, 'Routes:')
     adding_route_index = get_user_input('Choose a route to add:').to_i
-    adding_route = @trains[adding_route_index]
+    adding_route = @route[adding_route_index]
 
     unless adding_route
       puts 'Not an existing route'
@@ -199,7 +201,7 @@ class App
       return
     end
 
-    wagon = train.type == :cargo ? CargoWagon.new : PassengerWagon.new
+    wagon = train.type == 'cargo' ? CargoWagon.new : PassengerWagon.new
     train.attach_wagon(wagon)
 
     puts "Wagon successfully attached to train #{train.number}"
@@ -265,17 +267,15 @@ class App
   end
 
   def random_station_name
-    prefixes = [
-      "Central", "Grand", "Union", "City", "Metro", "North", "South", "East", "West", "Main"
-    ]
-    suffixes = [
-      "Station", "Terminal", "Depot", "Stop", "Hub"
-    ]
+    existing_names = @stations.map(&:name)
 
-    prefix = prefixes.sample
-    suffix = suffixes.sample
+    loop do
+      prefix = %w[Central Grand Union City Metro North South East West Main].sample
+      suffix = %w[Station Terminal Depot Stop Hub].sample
 
-    "#{prefix} #{suffix}"
+      name = "#{prefix} #{suffix}"
+      return name unless existing_names.include?(name)
+    end
   end
 
   def print_list(array, message = nil)

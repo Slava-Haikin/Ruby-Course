@@ -30,8 +30,8 @@ class Route
   end
 
   def show_station_by_number(number)
-    raise ArugmentError unless number.positive?
+    raise ArgumentError unless number >= 0
 
-    puts stations[number]
+    puts get_stations_list[number]
   end
 end

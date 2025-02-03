@@ -19,18 +19,12 @@ class Station
     @trains.push(train)
   end
 
-  def dispatch_train
-    @trains.pop
+  def dispatch_train(train)
+    @trains.delete(train)
   end
 
   def get_train_list_by_type(type)
-    case type
-    when 'passenger'
-      @trains.select { |train| train.type == 'passenger' }
-    when 'cargo'
-      @trains.select { |train| train.type == 'cargo' }
-    else
-      raise ArgumentError, "Invalid train type: #{type}"
-    end
+      raise ArgumentError, "Invalid train type: #{type}" unless ['cargo', 'passenger'].include?(type)
+      @trains.select { |train| train.type == type }
   end
 end
