@@ -40,22 +40,26 @@ class App
   end
 
   private
-  def show_menu
-    puts '
-      Welcome to the dispatch center.
 
-      1.  Create [s]tation
-      2.  Create [t]rain
-      3.  Create [r]oute
-      4.  Modif[y] route
-      5.  Set [u]p train route
-      6.  [A]ttach wagon
-      7.  [D]etach wagon
-      8.  [M]ove train
-      9.  Show station [l]ist
-      10. Show trains list [o]n the station
-      0.  [E]xit
-    '
+  MENU = [
+    { id: 1, commands: %w[s create\ station], action: :create_station, title: "Create station" },
+    { id: 2, commands: %w[t create\ train], action: :create_train, title: "Create train" },
+    { id: 3, commands: %w[r create\ route], action: :create_route, title: "Create route" },
+    { id: 4, commands: %w[y modify\ route], action: :modify_route, title: "Modify route" },
+    { id: 5, commands: %w[u set\ route], action: :set_train_route, title: "Set train route" },
+    { id: 6, commands: %w[a attach\ wagon], action: :attach_wagon, title: "Attach wagon" },
+    { id: 7, commands: %w[d detach\ wagon], action: :detach_wagon, title: "Detach wagon" },
+    { id: 8, commands: %w[m move\ train], action: :move_train, title: "Move train" },
+    { id: 9, commands: %w[l stations\ list], action: :stations_list, title: "Show stations list" },
+    { id: 10, commands: %w[o trains\ list], action: :trains_list, title: "Show trains list" },
+    { id: 0, commands: %w[E e exit], action: :exit, title: "Exit" }
+  ]
+
+
+  def show_menu
+    puts "\nWelcome to the dispatch center.\n\n"
+    MENU.each { |item| puts "#{item[:id]}. #{item[:title]}" }
+    puts "\n\n"
   end
 
   def get_user_input(message = nil)
@@ -64,22 +68,16 @@ class App
   end
 
   def execute_menu_command(command)
-    case command
-    when '1', 's', 'create station' then create_station
-    when '2', 't', 'create train' then create_train
-    when '3', 'r', 'create route' then create_route
-    when '4', 'y', 'modify route' then modify_route
-    when '5', 'u', 'set route' then set_train_route
-    when '6', 'a', 'attach wagon' then attach_wagon
-    when '7', 'd', 'detach wagon' then detach_wagon
-    when '8', 'm', 'move train' then move_train
-    when '9', 'l', 'stations list' then stations_list
-    when '10', 'o', 'trains list' then trains_list
-    when '0', 'E' then exit
+    menu_item = MENU.find { |item| item[:commands].include?(command) || command.to_i == item[:id] }
+
+    if menu_item
+      action = menu_item[:action]
+      send(action)
     else
-      puts 'Unknown command, please try again'
+      puts 'Invalid command. Please try again.'
     end
   end
+
 
   def create_station()
     station_name = get_user_input('Input station name and/or press enter:')
