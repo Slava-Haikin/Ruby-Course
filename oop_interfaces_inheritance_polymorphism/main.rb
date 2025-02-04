@@ -125,45 +125,51 @@ class App
 
     action_type = get_user_input 'Do you want add or delete station?'
     case action_type
-    when 'add'
-      available_stations = @stations - modifying_route.get_stations_list
-
-      print_list(available_stations, 'Choose station to add')
-
-      adding_station_index_input = get_user_input
-      adding_station = available_stations[adding_station_index_input.to_i]
-
-      if adding_station
-        modifying_route.add_station(adding_station)
-        puts "Station #{adding_station.name} added successfully."
-      else
-        puts "Invalid selection."
-      end
-    when 'delete'
-      puts 'Choose station to delete (cannot remove first or last station):'
-
-      removable_stations = modifying_route.get_stations_list[1..-2]
-
-      if removable_stations.empty?
-        puts "No stations available for removal."
-      else
-        print_list(removable_stations)
-
-        deleting_station_index_input = get_user_input
-        deleting_station = removable_stations[deleting_station_index_input.to_i]
-
-        if deleting_station
-          modifying_route.remove_station(deleting_station)
-          puts "Station #{deleting_station.name} removed successfully."
-        else
-          puts "Invalid selection."
-        end
-      end
+    when 'add' then add_route(modyfying_route)
+    when 'delete' then delete_route(modyfying_route)
     else
       puts "Unknown action."
     end
 
     print_list(modifying_route.get_stations_list)
+  end
+
+  def add_route()
+    available_stations = @stations - modifying_route.get_stations_list
+
+    print_list(available_stations, 'Choose station to add')
+
+    adding_station_index_input = get_user_input
+    adding_station = available_stations[adding_station_index_input.to_i]
+
+    if adding_station
+      modifying_route.add_station(adding_station)
+      puts "Station #{adding_station.name} added successfully."
+    else
+      puts "Invalid selection."
+    end
+  end
+
+  def delete_route()
+    puts 'Choose station to delete (cannot remove first or last station):'
+
+    removable_stations = modifying_route.get_stations_list[1..-2]
+
+    if removable_stations.empty?
+      puts "No stations available for removal."
+    else
+      print_list(removable_stations)
+
+      deleting_station_index_input = get_user_input
+      deleting_station = removable_stations[deleting_station_index_input.to_i]
+
+      if deleting_station
+        modifying_route.remove_station(deleting_station)
+        puts "Station #{deleting_station.name} removed successfully."
+      else
+        puts "Invalid selection."
+      end
+    end
   end
 
   def set_train_route()
