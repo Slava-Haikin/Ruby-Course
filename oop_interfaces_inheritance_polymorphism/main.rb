@@ -91,8 +91,8 @@ class App
     train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
     train_number = rand(1_000_000)
 
-    newTrain = train_type == 'cargo' ? CargoTrain.new(train_number) : PassengerTrain.new(train_number)
-    @trains << newTrain
+    new_train = train_type == 'cargo' ? CargoTrain.new(train_number) : PassengerTrain.new(train_number)
+    @trains << new_train
 
     print_list(@trains, 'New train list:')
   end
@@ -112,8 +112,8 @@ class App
       return
     end
 
-    newRoute = Route.new(starting_station, final_station)
-    @routes << newRoute
+    new_route = Route.new(starting_station, final_station)
+    @routes << new_route
     print_list(@routes)
   end
 
@@ -189,7 +189,7 @@ class App
 
     print_list(@routes, 'Routes:')
     adding_route_index = get_user_input('Choose a route to add:').to_i
-    adding_route = @route[adding_route_index]
+    adding_route = @routes[adding_route_index]
 
     unless adding_route
       puts 'Not an existing route'
