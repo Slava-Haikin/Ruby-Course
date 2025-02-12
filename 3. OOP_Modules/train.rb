@@ -1,8 +1,15 @@
+# Добавить к поезду атрибут Номер (произвольная строка), если его еще нет, который указыватеся при его создании
+
 class Train
   include Manufacturer
   attr_accessor :speed
   attr_reader :wagons, :number
   attr_writer :route
+  @@instances = []
+
+  def self.find(number)
+    @@instances.find { |instance| instance.number == number}
+  end
 
   def initialize(number, type = nil)
     @number = number
@@ -11,6 +18,7 @@ class Train
     @wagons = []
     @speed = 0
     @route_station_index = 0
+    @@instances << self
   end
 
   def set_route(route)
@@ -34,7 +42,7 @@ class Train
   end
 
   def detach_wagon
-    raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? || @wagons.length.positive?
+    raise "Error: Cannot detach wagon while train is moving or no wagons to detach" unless @speed.zero? && @wagons.length.positive?
 
     @wagons.pop
   end
@@ -48,7 +56,7 @@ class Train
 
     station_list = @route.get_stations_list
     stations_list_length = @route.length
-    last_station_index = station_list.positive ? stations_list_length.positive? : stations_list_length - 1
+    last_station_index = station_list_length.positive ? stations_list_length.positive? : stations_list_length - 1
 
      @route.show_station_by_index[@route_station_index + 1] if @route_station_index < last_station_index
   end
