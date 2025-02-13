@@ -2,5 +2,5 @@
 # Подключить модуль к классам Вагон и Поезд.
 
 module Manufacturer
-    attr_accessor :manufacturer
+  attr_accessor :manufacturer
 end
