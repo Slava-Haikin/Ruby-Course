@@ -9,6 +9,7 @@ class Route
     @starting_station = starting_station
     @final_station = final_station
     @stations = []
+    register_instance if respond_to?(:register_instance)
   end
 
   def add_station(station)

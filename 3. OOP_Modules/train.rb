@@ -21,6 +21,7 @@ class Train
     @speed = 0
     @route_station_index = 0
     @@instances << self
+    register_instance if respond_to?(:register_instance)
   end
 
   def set_route(route)
