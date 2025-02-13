@@ -1,6 +1,8 @@
 # Добавить к поезду атрибут Номер (произвольная строка), если его еще нет, который указыватеся при его создании
+# Подключить модуль счетчика в класс поезда.
 
 class Train
+  include InstanceCounter
   include Manufacturer
   attr_accessor :speed
   attr_reader :wagons, :number

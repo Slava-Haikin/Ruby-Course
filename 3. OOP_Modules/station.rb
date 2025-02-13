@@ -1,6 +1,8 @@
 # В классе Station (жд станция) создать метод класса all, который возвращает все станции (объекты), созданные на данный момент
+# Подключить модуль счетчика в класс станции.
 
 class Station
+  include InstanceCounter
   attr_reader :trains, :name
   @@instances = []
 

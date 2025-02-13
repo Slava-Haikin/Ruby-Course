@@ -1,4 +1,7 @@
+# Подключить модуль счетчика в класс маршрута.
+
 class Route
+  include InstanceCounter
   attr_reader :name, :stations
 
   def initialize(starting_station, final_station)
