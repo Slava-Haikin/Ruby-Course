@@ -12,7 +12,10 @@ class Train
     @@instances.find { |instance| instance.number == number}
   end
 
-  def initialize(number, type = nil)
+  TRAIN_NUMBER_FORMAT = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/.freeze
+  TRAIN_TYPES = %w[cargo passenger].freeze
+
+  def initialize(number, type)
     @number = number
     @type = type
     @route = nil
@@ -61,7 +64,7 @@ class Train
 
     station_list = @route.get_stations_list
     stations_list_length = @route.length
-    last_station_index = station_list_length.positive ? stations_list_length.positive? : stations_list_length - 1
+    last_station_index = station_list_length.positive? ? stations_list_length.positive? : stations_list_length - 1
 
      @route.show_station_by_index[@route_station_index + 1] if @route_station_index < last_station_index
   end
@@ -90,9 +93,7 @@ class Train
 
   protected
   def valid?
-    TRAIN_NUMBER_FORMAT = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
-
-    @number.match?(TRAIN_NUMBER_FORMAT)
+    @number.match?(TRAIN_NUMBER_FORMAT) && TRAIN_TYPES.include?(@type)
   end
 
   def validate!
