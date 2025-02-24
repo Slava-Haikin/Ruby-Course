@@ -91,15 +91,24 @@ class App
     print_list(@stations, 'New stations list:')
   end
 
-  def create_train()
-    train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
-    train_number = rand(1_000_000)
-
-    new_train = train_type == 'cargo' ? CargoTrain.new(train_number) : PassengerTrain.new(train_number)
-    @trains << new_train
-
-    print_list(@trains, 'New train list:')
+  def create_train
+    loop do
+      begin
+        train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
+        train_number = get_user_input 'Input train number (E.g. 123-23) and press enter:'
+  
+        new_train = train_type == 'cargo' ? CargoTrain.new(train_number, train_type) : PassengerTrain.new(train_number, train_type)
+        @trains << new_train
+  
+        print_list(@trains, 'New train list:')
+        break
+  
+      rescue StandardError => e
+        puts "Error: #{e.message}. Please try again."
+      end
+    end
   end
+  
 
   def create_route()
     print_list(@stations)

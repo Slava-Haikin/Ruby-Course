@@ -26,7 +26,6 @@ class Train
     validate!
 
     @@instances << self
-    register_instance if respond_to?(:register_instance)
   end
 
   def set_route(route)
@@ -97,6 +96,6 @@ class Train
   end
 
   def validate!
-    raise "Invalid train number format" unless valid?
+    raise "Invalid train number or type format" unless valid?
   end
 end
