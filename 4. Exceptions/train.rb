@@ -26,6 +26,7 @@ class Train
     validate!
 
     @@instances << self
+    register_instance if respond_to?(:register_instance)
   end
 
   def set_route(route)

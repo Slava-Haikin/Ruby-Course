@@ -96,7 +96,7 @@ class App
 
     begin
       attempts += 1
-      puts attempts
+
       train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
       train_number = get_user_input 'Input train number (E.g. 123-23) and press enter:'
 
@@ -104,7 +104,6 @@ class App
       @trains << new_train
 
       print_list(@trains, 'New train list:')
-
     rescue StandardError => e
       puts "Error: #{e.message}. Please try again."
       retry if attempts < 5
