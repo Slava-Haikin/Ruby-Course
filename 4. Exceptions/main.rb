@@ -92,20 +92,22 @@ class App
   end
 
   def create_train
-    loop do
-      begin
-        train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
-        train_number = get_user_input 'Input train number (E.g. 123-23) and press enter:'
-  
-        new_train = train_type == 'cargo' ? CargoTrain.new(train_number, train_type) : PassengerTrain.new(train_number, train_type)
-        @trains << new_train
-  
-        print_list(@trains, 'New train list:')
-        break
-  
-      rescue StandardError => e
-        puts "Error: #{e.message}. Please try again."
-      end
+    attempts = 0
+
+    begin
+      attempts += 1
+      puts attempts
+      train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
+      train_number = get_user_input 'Input train number (E.g. 123-23) and press enter:'
+
+      new_train = train_type == 'cargo' ? CargoTrain.new(train_number, train_type) : PassengerTrain.new(train_number, train_type)
+      @trains << new_train
+
+      print_list(@trains, 'New train list:')
+
+    rescue StandardError => e
+      puts "Error: #{e.message}. Please try again."
+      retry if attempts < 5
     end
   end
   
