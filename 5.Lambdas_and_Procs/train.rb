@@ -1,4 +1,5 @@
-# Реализовать проверку (валидацию) данных для всех классов.
+# У класса Train написать метод, который принимает блок и проходит по всем вагонам поезда (вагоны должны быть во внутреннем массиве), 
+# передавая каждый объект вагона в блок.
 
 class Train
   include InstanceCounter
@@ -89,6 +90,10 @@ class Train
     raise "Error: No previous station to move backward" unless route || @route_station_index.positive?
 
     @route_station_index -= 1
+  end
+
+  def each_wagon
+    @wagons.each { |train| yield(train) } if block_given?
   end
 
   protected

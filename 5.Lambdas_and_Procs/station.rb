@@ -1,3 +1,5 @@
+# У класса Station написать метод, который принимает блок и проходит по всем поездам на станции, передавая каждый поезд в блок.
+
 class Station
   include InstanceCounter
   attr_reader :trains, :name
@@ -30,7 +32,10 @@ class Station
       @trains.select { |train| train.type == type }
   end
 
-  
+  def each_train
+    @trains.each { |train| yield(train) } if block_given?
+  end
+
   protected
   def valid?
     !@name.empty?
