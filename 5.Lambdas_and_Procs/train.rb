@@ -3,7 +3,7 @@
 class Train
   include InstanceCounter
   include Manufacturer
-  attr_accessor :speed
+  attr_accessor :speed, :type
   attr_reader :wagons, :number
   attr_writer :route
   @@instances = []
