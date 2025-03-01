@@ -12,7 +12,12 @@ require_relative 'train'
 require_relative 'cargo_train'
 require_relative 'passenger_train'
 
-
+=begin
+  - При создании вагона указывать кол-во мест или общий объем, в зависимости от типа вагона
+  - Выводить список вагонов у поезда (в указанном выше формате), используя созданные методы
+  - Выводить список поездов на станции (в указанном выше формате), используя  созданные методы
+  - Занимать место или объем в вагоне
+=end
 
 class App
   def initialize()
@@ -38,17 +43,19 @@ class App
   private
 
   MENU = [
-    { id: 1, commands: %w[s create\ station], action: :create_station, title: "Create station" },
-    { id: 2, commands: %w[t create\ train], action: :create_train, title: "Create train" },
-    { id: 3, commands: %w[r create\ route], action: :create_route, title: "Create route" },
-    { id: 4, commands: %w[y modify\ route], action: :modify_route, title: "Modify route" },
-    { id: 5, commands: %w[u set\ route], action: :set_train_route, title: "Set train route" },
-    { id: 6, commands: %w[a attach\ wagon], action: :attach_wagon, title: "Attach wagon" },
-    { id: 7, commands: %w[d detach\ wagon], action: :detach_wagon, title: "Detach wagon" },
-    { id: 8, commands: %w[m move\ train], action: :move_train, title: "Move train" },
-    { id: 9, commands: %w[l stations\ list], action: :stations_list, title: "Show stations list" },
+    { id: 1, commands: %w[s create\ station], action: :create_station, title: " Create station" },
+    { id: 2, commands: %w[t create\ train], action: :create_train, title: " Create train" },
+    { id: 3, commands: %w[r create\ route], action: :create_route, title: " Create route" },
+    { id: 4, commands: %w[y modify\ route], action: :modify_route, title: " Modify route" },
+    { id: 5, commands: %w[u set\ route], action: :set_train_route, title: " Set train route" },
+    { id: 6, commands: %w[a attach\ wagon], action: :attach_wagon, title: " Attach wagon" },
+    { id: 7, commands: %w[d detach\ wagon], action: :detach_wagon, title: " Detach wagon" },
+    { id: 8, commands: %w[m move\ train], action: :move_train, title: " Move train" },
+    { id: 9, commands: %w[l stations\ list], action: :stations_list, title: " Show stations list" },
     { id: 10, commands: %w[o trains\ list], action: :trains_list, title: "Show trains list" },
-    { id: 0, commands: %w[E e exit], action: :exit, title: "Exit" }
+    { id: 11, commands: %w[g wagons\ list], action: :wagons_list, title: "Show train wagons list" },
+    { id: 12, commands: %w[i load\ wagon], action: :load_wagon, title: "Load specific wagon" },
+    { id: 0, commands: %w[E e exit], action: :exit, title: " Exit" }
   ]
 
 
@@ -282,7 +289,60 @@ class App
       return
     end
 
-    print_list(station.trains, "Trains at #{station.name}:")
+    puts "Trains at #{station.name}:"
+    station.each_train { |train| puts trains.number }
+  end
+
+  def wagons_list
+    print_list(@trains, 'Choose a train to show its wagons:')
+    train_index = get_user_input.to_i
+    train = @trains[train_index]
+
+    unless train
+      puts 'Invalid train selection'
+      return
+    end
+
+    puts "Wagons attached to train #{train.number}:"
+    train.each_wagon { |wagon| puts wagon }
+  end
+
+  def load_wagon
+    print_list(@trains, 'Choose a train to show its wagons:')
+    train_index = get_user_input.to_i
+    train = @trains[train_index]
+
+    unless train
+      puts 'Invalid train selection'
+      return
+    end
+
+    print_list(train.wagons, 'Choose a wagon to load it:')
+    wagon_index = get_user_input.to_i
+    wagon = train.wagons[wagon_index]
+
+    unless wagon
+      puts 'Invalid wagon selection'
+      return
+    end
+
+    cargo_train = train.type == 'cargo'
+
+    if cargo_train
+      puts "What is the cargo volume? Available space is: #{wagon.available_volume}"
+      cargo_volume = get_user_input.to_i
+      space_enough = cargo_volume <= wagon.available_volume
+
+      if space_enough
+        wagon.load_cargo(cargo_volume) 
+        puts "Cargo loaded! Volume available: #{wagon.available_volume}"
+      else
+        puts "Not enough space! Volume available: #{wagon.available_volume}"
+      end
+    else
+      result = wagon.occupy_seat
+      puts(result ? "You successfully booked a seat on #{wagon.number}. Seats left: #{wagon.available_seats}" : "No seats available, sorry")
+    end
   end
 
   def random_station_name
