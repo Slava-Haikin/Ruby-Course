@@ -208,15 +208,19 @@ class App
 
   def attach_wagon
     print_list(@trains, 'Choose a train to attach a wagon:')
+
     train_index = get_user_input.to_i
     train = @trains[train_index]
+    cargo_train = train.type == 'cargo'
 
     unless train
       puts 'Invalid train selection'
       return
     end
 
-    wagon = train.type == 'cargo' ? CargoWagon.new : PassengerWagon.new
+    print 
+
+    wagon = cargo_train ? CargoWagon.new : PassengerWagon.new
     train.attach_wagon(wagon)
 
     puts "Wagon successfully attached to train #{train.number}"
