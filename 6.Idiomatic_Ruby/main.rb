@@ -1,3 +1,6 @@
+# The App class provides a command-line interface for managing trains, stations, and routes.
+# It includes methods to create and modify these objects, as well as to interact with the user through a menu system.
+
 require_relative 'manufacturer'
 require_relative 'instance_counter'
 
@@ -13,18 +16,16 @@ require_relative 'cargo_train'
 require_relative 'passenger_train'
 
 class App
-  def initialize()
+  def initialize
     @routes = []
     @trains = []
     @stations = []
     @initialized = false
   end
 
-  def start()
+  def start
     loop do
-      if @initialized
-        get_user_input 'To continue press "Enter"'
-      end
+      get_user_input 'To continue press "Enter"' if @initialized
 
       show_menu
       command = get_user_input 'Enter your command:'
@@ -36,21 +37,20 @@ class App
   private
 
   MENU = [
-    { id: 1, commands: %w[s create\ station], action: :create_station, title: " Create station" },
-    { id: 2, commands: %w[t create\ train], action: :create_train, title: " Create train" },
-    { id: 3, commands: %w[r create\ route], action: :create_route, title: " Create route" },
-    { id: 4, commands: %w[y modify\ route], action: :modify_route, title: " Modify route" },
-    { id: 5, commands: %w[u set\ route], action: :set_train_route, title: " Set train route" },
-    { id: 6, commands: %w[a attach\ wagon], action: :attach_wagon, title: " Attach wagon" },
-    { id: 7, commands: %w[d detach\ wagon], action: :detach_wagon, title: " Detach wagon" },
-    { id: 8, commands: %w[m move\ train], action: :move_train, title: " Move train" },
-    { id: 9, commands: %w[l stations\ list], action: :stations_list, title: " Show stations list" },
-    { id: 10, commands: %w[o trains\ list], action: :trains_list, title: "Show trains list" },
-    { id: 11, commands: %w[g wagons\ list], action: :wagons_list, title: "Show train wagons list" },
-    { id: 12, commands: %w[i load\ wagon], action: :load_wagon, title: "Load specific wagon" },
-    { id: 0, commands: %w[E e exit], action: :exit, title: " Exit" }
+    { id: 1, commands: ['s', 'create station'], action: :create_station, title: ' Create station' },
+    { id: 2, commands: ['t', 'create train'], action: :create_train, title: ' Create train' },
+    { id: 3, commands: ['r', 'create route'], action: :create_route, title: ' Create route' },
+    { id: 4, commands: ['y', 'modify route'], action: :modify_route, title: ' Modify route' },
+    { id: 5, commands: ['u', 'set route'], action: :set_train_route, title: ' Set train route' },
+    { id: 6, commands: ['a', 'attach wagon'], action: :attach_wagon, title: ' Attach wagon' },
+    { id: 7, commands: ['d', 'detach wagon'], action: :detach_wagon, title: ' Detach wagon' },
+    { id: 8, commands: ['m', 'move train'], action: :move_train, title: ' Move train' },
+    { id: 9, commands: ['l', 'stations list'], action: :stations_list, title: ' Show stations list' },
+    { id: 10, commands: ['o', 'trains list'], action: :trains_list, title: 'Show trains list' },
+    { id: 11, commands: ['g', 'wagons list'], action: :wagons_list, title: 'Show train wagons list' },
+    { id: 12, commands: ['i', 'load wagon'], action: :load_wagon, title: 'Load specific wagon' },
+    { id: 0, commands: %w[E e exit], action: :exit, title: ' Exit' }
   ]
-
 
   def show_menu
     puts "\nWelcome to the dispatch center.\n\n"
@@ -74,8 +74,7 @@ class App
     end
   end
 
-
-  def create_station()
+  def create_station
     station_name = get_user_input('Input station name and/or press enter:')
 
     @stations << Station.new(station_name.empty? ? random_station_name : station_name)
@@ -92,7 +91,12 @@ class App
       train_type = get_user_input 'Input train type (cargo/passenger) and press enter:'
       train_number = get_user_input 'Input train number (E.g. 123-23) and press enter:'
 
-      new_train = train_type == 'cargo' ? CargoTrain.new(train_number, train_type) : PassengerTrain.new(train_number, train_type)
+      new_train = if train_type == 'cargo'
+                    CargoTrain.new(train_number,
+                                   train_type)
+                  else
+                    PassengerTrain.new(train_number, train_type)
+                  end
       @trains << new_train
 
       print_list(@trains, 'New train list:')
@@ -101,9 +105,8 @@ class App
       retry if attempts < 5
     end
   end
-  
 
-  def create_route()
+  def create_route
     print_list(@stations)
     starting_station_index = get_user_input('Choose starting station number and press enter').to_i
     starting_station = @stations[starting_station_index]
@@ -183,7 +186,7 @@ class App
     end
   end
 
-  def set_train_route()
+  def set_train_route
     print_list(@trains, 'Trains:')
     modifying_train_index = get_user_input('Choose a train number to set up the route:').to_i
     modifying_train = @trains[modifying_train_index]
@@ -218,7 +221,7 @@ class App
       return
     end
 
-    print 
+    print
 
     wagon = cargo_train ? CargoWagon.new : PassengerWagon.new
     train.attach_wagon(wagon)
@@ -283,7 +286,7 @@ class App
     end
 
     puts "Trains at #{station.name}:"
-    station.each_train { |train| puts trains.number }
+    station.each_train { |_train| puts trains.number }
   end
 
   def wagons_list
@@ -327,14 +330,14 @@ class App
       space_enough = cargo_volume <= wagon.available_volume
 
       if space_enough
-        wagon.load_cargo(cargo_volume) 
+        wagon.load_cargo(cargo_volume)
         puts "Cargo loaded! Volume available: #{wagon.available_volume}"
       else
         puts "Not enough space! Volume available: #{wagon.available_volume}"
       end
     else
       result = wagon.occupy_seat
-      puts(result ? "You successfully booked a seat on #{wagon.number}. Seats left: #{wagon.available_seats}" : "No seats available, sorry")
+      puts(result ? "You successfully booked a seat on #{wagon.number}. Seats left: #{wagon.available_seats}" : 'No seats available, sorry')
     end
   end
 
@@ -351,9 +354,7 @@ class App
   end
 
   def print_list(array, message = nil)
-    if (message)
-      puts message
-    end
+    puts message if message
 
     puts "=======================\n"
     array.each_with_index do |item, index|

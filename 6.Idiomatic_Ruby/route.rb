@@ -1,3 +1,8 @@
+# The Route class represents a train route with a starting station, a final station, and intermediate stations.
+# It includes the InstanceCounter module to provide instance counting functionality.
+# The class provides methods to manage the stations on the route, including adding and removing stations,
+# as well as retrieving the list of stations and showing a station by its number.
+
 class Route
   include InstanceCounter
   attr_reader :name, :stations
@@ -32,11 +37,12 @@ class Route
   end
 
   protected
+
   def valid?
     !@starting_station.empty? && !@final_station.empty?
   end
 
   def validate!
-    raise "Invalid starting or final station" unless valid?
+    raise 'Invalid starting or final station' unless valid?
   end
 end

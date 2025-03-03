@@ -1,3 +1,6 @@
+# The InstanceCounter module provides functionality to count instances of a class.
+# It includes methods to increment and retrieve the instance count.
+
 module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
@@ -8,11 +11,11 @@ module InstanceCounter
     attr_reader :instances
 
     def instances
-      @instances ||=0
+      @instances ||= 0
     end
 
     def increment_instances
-      @instances = instances + 1 
+      @instances = instances + 1
     end
   end
 

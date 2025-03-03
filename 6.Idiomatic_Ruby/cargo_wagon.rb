@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+# The CargoWagon class represents a cargo wagon with a specific total and occupied volume.
+# It inherits from the Wagon class and provides methods to load and unload cargo, as well as to check available volume.
+
 class CargoWagon < Wagon
   attr_reader :total_volume, :occupied_volume, :measure_unit
 
