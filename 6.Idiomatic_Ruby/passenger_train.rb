@@ -4,7 +4,4 @@
 # It inherits from the Train class and initializes with a specific number and type.
 
 class PassengerTrain < Train
-  def initialize(number, type)
-    super(number, type)
-  end
 end

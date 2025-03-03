@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Route class represents a train route with a starting station, a final station, and intermediate stations.
 # It includes the InstanceCounter module to provide instance counting functionality.
 # The class provides methods to manage the stations on the route, including adding and removing stations,
@@ -26,14 +28,14 @@ class Route
     @stations.delete(station)
   end
 
-  def get_stations_list
+  def stations_list
     [@starting_station, *@stations, @final_station]
   end
 
   def show_station_by_number(number)
     raise ArgumentError unless number >= 0
 
-    puts get_stations_list[number]
+    puts stations_list[number]
   end
 
   protected

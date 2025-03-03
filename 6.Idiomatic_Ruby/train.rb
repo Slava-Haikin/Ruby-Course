@@ -1,18 +1,26 @@
+# frozen_string_literal: true
+
 # The Train class represents a train with a specific number, type, speed, route, and wagons.
-# It includes the InstanceCounter and Manufacturer modules to provide instance counting and manufacturer-related functionality.
-# The class provides methods to manage the train's speed, route, and wagons, as well as to move the train along its route.
+# It includes the InstanceCounter and Manufacturer modules to provide
+# instance counting and manufacturer-related functionality.
+# The class provides methods to manage the train's speed, route,
+# and wagons, as well as to move the train along its route.
 
 class Train
   include InstanceCounter
   include Manufacturer
+
   attr_accessor :speed, :type
-  attr_reader :wagons, :number
-  attr_writer :route
+  attr_reader :wagons, :number, :route
 
-  @@instances = []
+  @instances = []
 
-  def self.find(number)
-    @@instances.find { |instance| instance.number == number }
+  class << self
+    attr_reader :instances
+
+    def find(number)
+      @instances.find { |instance| instance.number == number }
+    end
   end
 
   TRAIN_NUMBER_FORMAT = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
@@ -28,11 +36,12 @@ class Train
 
     validate!
 
-    @@instances << self
-    register_instance if respond_to?(:register_instance)
+    self.class.instances << self
+
+    register_instance if defined?(register_instance)
   end
 
-  def set_route(route)
+  def route=(route)
     @route = route
     @route_station_index = 0 if route
   end
@@ -82,8 +91,7 @@ class Train
 
   def move_forward
     raise 'Error: No route assigned' unless @route
-
-    raise 'Error: No more stations to move forward' unless @route_station_index < @route.get_stations_list.length - 1
+    raise 'Error: No more stations to move forward' unless @route_station_index < @route.stations.size - 1
 
     @route_station_index += 1
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The App class provides a command-line interface for managing trains, stations, and routes.
 # It includes methods to create and modify these objects, as well as to interact with the user through a menu system.
 
@@ -50,7 +52,7 @@ class App
     { id: 11, commands: ['g', 'wagons list'], action: :wagons_list, title: 'Show train wagons list' },
     { id: 12, commands: ['i', 'load wagon'], action: :load_wagon, title: 'Load specific wagon' },
     { id: 0, commands: %w[E e exit], action: :exit, title: ' Exit' }
-  ]
+  ].freeze
 
   def show_menu
     puts "\nWelcome to the dispatch center.\n\n"
@@ -337,7 +339,11 @@ class App
       end
     else
       result = wagon.occupy_seat
-      puts(result ? "You successfully booked a seat on #{wagon.number}. Seats left: #{wagon.available_seats}" : 'No seats available, sorry')
+      successfully_booked_text = result "You successfully booked a seat on #{wagon.number}.
+      Seats left: #{wagon.available_seats}"
+      no_seats_text = 'No seats available, sorry'
+
+      puts(result ? successfully_booked_text : no_seats_text)
     end
   end
 

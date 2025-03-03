@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The PassengerWagon class represents a passenger wagon with a specific number of total and occupied seats.
 # It inherits from the Wagon class and provides methods to occupy a seat and check available seats.
 

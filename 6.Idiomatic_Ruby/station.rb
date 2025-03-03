@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Station class represents a train station with a specific name and a list of trains.
 # It includes the InstanceCounter module to provide instance counting functionality.
 # The class provides methods to manage the trains at the station, including receiving and dispatching trains,
@@ -7,10 +9,13 @@ class Station
   include InstanceCounter
   attr_reader :trains, :name
 
-  @@instances = []
+  @instances = []
+  class << self
+    attr_reader :instances
 
-  def self.all
-    @@instances
+    def all
+      @instances
+    end
   end
 
   def initialize(name)
