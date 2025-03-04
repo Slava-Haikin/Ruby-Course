@@ -3,6 +3,8 @@
 require_relative 'station'
 
 class StationManager
+  attr_reader :stations
+
   def initialize(menu)
     @menu = menu
     @stations = []

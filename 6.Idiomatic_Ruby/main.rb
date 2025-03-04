@@ -12,11 +12,22 @@ require_relative 'station_manager'
 require_relative 'wagon_manager'
 
 class App
+  ACTIONS = {
+    add_train: :add_train,
+    add_route: :add_route,
+    add_station: :add_station,
+    assign_route: :assign_route_to_train,
+    attach_wagon: :attach_wagon,
+    detach_wagon: :detach_wagon,
+    list_trains: :list_trains,
+    list_wagons: :list_wagons
+  }.freeze
+
   def initialize
     @menu = Menu.new
     @train_manager = TrainManager.new(@menu)
-    @route_manager = RouteManager.new(@menu)
     @station_manager = StationManager.new(@menu)
+    @route_manager = RouteManager.new(@menu, @station_manager)
     @wagon_manager = WagonManager.new(@menu)
   end
 
@@ -31,21 +42,24 @@ class App
   private
 
   def run_action(action)
-    actions = {
-      add_train: -> { @train_manager.add_train },
-      add_route: -> { @route_manager.add_route },
-      add_station: -> { @station_manager.add_station },
-      assign_route: -> { @train_manager.assign_route_to_train },
-      attach_wagon: -> { @wagon_manager.attach_wagon },
-      detach_wagon: -> { @wagon_manager.detach_wagon },
-      list_trains: -> { @station_manager.list_trains },
-      list_wagons: -> { @wagon_manager.list_wagons }
-    }
+    manager = find_manager(action)
+    method = ACTIONS[action]
 
-    actions.fetch(action, -> { puts 'Unknown command' }).call
+    if manager && method
+      manager.public_send(method)
+    else
+      puts 'Unknown command'
+    end
+  end
+
+  def find_manager(action)
+    case action
+    when :add_train, :assign_route then @train_manager
+    when :add_route then @route_manager
+    when :add_station, :list_trains then @station_manager
+    when :attach_wagon, :detach_wagon, :list_wagons then @wagon_manager
+    end
   end
 end
-
-App.new.start
 
 App.new.start
