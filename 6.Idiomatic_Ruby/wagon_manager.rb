@@ -5,13 +5,14 @@ require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
 
 class WagonManager
-  def initialize(menu)
+  def initialize(menu, train_manager)
     @menu = menu
+    @train_manager = train_manager
   end
 
   def attach_wagon
-    @menu.display_list(@trains, 'Select a train:')
-    train = @trains[@menu.prompt_user(to_number: true)]
+    @menu.display_list(@train_manager.trains, 'Select a train:')
+    train = @train_manager.trains[@menu.prompt_user(to_number: true)]
 
     return puts 'Invalid train selection' unless train
 
@@ -22,8 +23,8 @@ class WagonManager
   end
 
   def detach_wagon
-    @menu.display_list(@trains, 'Select a train:')
-    train = @trains[@menu.prompt_user(to_number: true)]
+    @menu.display_list(@train_manager.trains, 'Select a train:')
+    train = @train_manager.trains[@menu.prompt_user(to_number: true)]
 
     return puts 'Invalid train selection' unless train
     return puts 'No wagons to detach' if train.wagons.empty?
@@ -33,8 +34,8 @@ class WagonManager
   end
 
   def list_wagons
-    @menu.display_list(@trains, 'Select a train:')
-    train = @trains[@menu.prompt_user(to_number: true)]
+    @menu.display_list(@train_manager.trains, 'Select a train:')
+    train = @train_manager.trains[@menu.prompt_user(to_number: true)]
 
     return puts 'Invalid train selection' unless train
 

@@ -5,8 +5,11 @@ require_relative 'cargo_train'
 require_relative 'passenger_train'
 
 class TrainManager
-  def initialize(menu)
+  attr_reader :trains
+
+  def initialize(menu, route_manager)
     @menu = menu
+    @route_manager = route_manager
     @trains = []
   end
 
@@ -31,7 +34,7 @@ class TrainManager
     return puts 'Invalid train selection' unless train
 
     @menu.display_list(@routes, 'Select a route:')
-    route = @routes[@menu.prompt_user(to_number: true)]
+    route = @route_manager.routes[@menu.prompt_user(to_number: true)]
 
     return puts 'Invalid route selection' unless route
 

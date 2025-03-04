@@ -25,10 +25,10 @@ class App
 
   def initialize
     @menu = Menu.new
-    @train_manager = TrainManager.new(@menu)
     @station_manager = StationManager.new(@menu)
     @route_manager = RouteManager.new(@menu, @station_manager)
-    @wagon_manager = WagonManager.new(@menu)
+    @train_manager = TrainManager.new(@menu, @route_manager)
+    @wagon_manager = WagonManager.new(@menu, @train_manager)
   end
 
   def start

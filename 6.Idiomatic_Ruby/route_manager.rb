@@ -3,6 +3,8 @@
 require_relative 'route'
 
 class RouteManager
+  attr_reader :routes
+
   def initialize(menu, station_manager)
     @menu = menu
     @routes = []
