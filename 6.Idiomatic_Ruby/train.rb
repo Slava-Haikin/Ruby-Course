@@ -13,16 +13,6 @@ class Train
   attr_accessor :speed, :type
   attr_reader :wagons, :number, :route
 
-  @instances = []
-
-  class << self
-    attr_reader :instances
-
-    def find(number)
-      @instances.find { |instance| instance.number == number }
-    end
-  end
-
   TRAIN_NUMBER_FORMAT = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
   TRAIN_TYPES = %w[cargo passenger].freeze
 
@@ -35,8 +25,6 @@ class Train
     @route_station_index = 0
 
     validate!
-
-    self.class.instances << self
 
     register_instance if defined?(register_instance)
   end
@@ -76,17 +64,14 @@ class Train
   def next_station
     return unless @route
 
-    @route.get_stations_list
-    stations_list_length = @route.length
-    last_station_index = station_list_length.positive? ? stations_list_length.positive? : stations_list_length - 1
-
-    @route.show_station_by_index[@route_station_index + 1] if @route_station_index < last_station_index
+    last_station_index = @route.stations.size - 1
+    @route.stations[@route_station_index + 1] if @route_station_index < last_station_index
   end
 
   def previous_station
     return unless @route && @route_station_index.positive?
 
-    @route.get_stations_list[@route_station_index - 1] if @route_station_index.positive?
+    @route.stations[@route_station_index - 1]
   end
 
   def move_forward
