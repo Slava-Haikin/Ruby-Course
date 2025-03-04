@@ -9,6 +9,16 @@ class Station
   include InstanceCounter
   attr_reader :trains, :name
 
+  def self.random_station_name(existing_names)
+    loop do
+      prefix = %w[Central Grand Union City Metro North South East West Main].sample
+      suffix = %w[Station Terminal Depot Stop Hub].sample
+
+      name = "#{prefix} #{suffix}"
+      return name unless existing_names.include?(name)
+    end
+  end
+
   def initialize(name)
     @name = name
     @trains = []

@@ -51,33 +51,33 @@ class App
   def add_station
     station_name = @menu.prompt_user(message: 'Input station name and/or press enter:')
 
-    @stations << Station.new(station_name.empty? ? random_station_name : station_name)
+    @stations << Station.new(station_name.empty? ? Station.random_station_name(@stations.map(&:name)) : station_name)
 
     @menu.display_list(@stations, 'New stations list:')
   end
 
   def add_train
-    # attempts = 0
+    attempts = 0
 
-    # begin
-    #   attempts += 1
+    begin
+      attempts += 1
 
-    train_type = @menu.prompt_user(message: 'Input train type (cargo/passenger) and press enter:')
-    train_number = @menu.prompt_user(message: 'Input train number (E.g. 123-23) and press enter:')
+      train_type = @menu.prompt_user(message: 'Input train type (cargo/passenger) and press enter:')
+      train_number = @menu.prompt_user(message: 'Input train number (E.g. 123-23) and press enter:')
 
-    new_train = if train_type == 'cargo'
-                  CargoTrain.new(train_number,
-                                 train_type)
-                else
-                  PassengerTrain.new(train_number, train_type)
-                end
-    @trains << new_train
+      new_train = if train_type == 'cargo'
+                    CargoTrain.new(train_number,
+                                   train_type)
+                  else
+                    PassengerTrain.new(train_number, train_type)
+                  end
+      @trains << new_train
 
-    @menu.display_list(@trains, 'New train list:')
-    # rescue StandardError => e
-    #   puts "Error: #{e.message}. Please try again."
-    #   retry if attempts < 5
-    # end
+      @menu.display_list(@trains, 'New train list:')
+    rescue StandardError => e
+      puts "Error: #{e.message}. Please try again."
+      retry if attempts < 5
+    end
   end
 
   def add_route
@@ -317,18 +317,6 @@ class App
       no_seats_text = 'No seats available, sorry'
 
       puts(result ? successfully_booked_text : no_seats_text)
-    end
-  end
-
-  def random_station_name
-    existing_names = @stations.map(&:name)
-
-    loop do
-      prefix = %w[Central Grand Union City Metro North South East West Main].sample
-      suffix = %w[Station Terminal Depot Stop Hub].sample
-
-      name = "#{prefix} #{suffix}"
-      return name unless existing_names.include?(name)
     end
   end
 end
