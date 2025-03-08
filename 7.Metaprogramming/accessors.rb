@@ -33,6 +33,12 @@ module Accessors
   end
 
   def strong_attr_accessor(_attr_name, _target_class)
-    puts 'Hello, World!'
+      define_method(_attr_name) { instance_variable_get("@#{_attr_name}") }
+
+      define_method("#{_attr_name}=") do |value|
+        raise "Type mismatch: Expected #{_target_class}, got #{value.class}" unless value.is_a?(_target_class)
+
+        instance_variable_set("@#{_attr_name}", value)
+      end
   end
 end
