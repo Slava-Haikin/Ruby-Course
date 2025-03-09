@@ -83,4 +83,3 @@ module Validation
     raise "Expected #{expected_class}, got #{property_value.class}" unless property_value.is_a?(expected_class)
   end
 end
-
