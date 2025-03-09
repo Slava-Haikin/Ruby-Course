@@ -34,21 +34,47 @@ module Validation
     base.instance_variable_set(:@validators, [])
   end
 
-  def self.validate(_attr_name, validator, options = nil)
-    @validators << { attr_name: attr_name, validator: validator, options: options }
+  def validate(_attr_name, validator, option = nil)
+    @validators << { attr_name: attr_name, validator: validator, option: option }
   end
 
-  def validate!; end
+  def validate!
+    self.class.instance_variable_get(:@validators).each do |validator|
+      value = instance_variable_get("@#{validator[:attr_name]}")
+      case validator[:validator]
+      when :presence then validate_presence(value)
+      when :format   then validate_format(value, validator[:option])
+      when :type     then validate_type(value, validator[:option])
+      else raise "Unknown validation type: #{validator[:validator]}"
+      end
+    end
+    true
+  end
 
-  private
+  def valid?
+    validate!
+    true
+  rescue StandardError
+    false
+  end
 
   def validate_presence(property_value)
-    raise 'Property value should be not empty or empty string' unless property_value && !property_value.empty?
+    raise 'Property value should be not empty or empty string' if property_value.nil? || property_value.strip.empty?
 
     true
   end
 
-  def validate_format; end
+  def validate_format(property_value, format)
+    raise 'Property value should not be nil or empty string' if property_value.nil? || property_value.strip.empty?
+    raise "Property value does not match format #{format}" unless property_value.match?(format)
+  
+    true
+  end
 
-  def validate_type; end
+  def validate_type(property_value, expected_class)
+    raise 'Property value should not be nil' if property_value.nil?
+    raise "Expected #{expected_class}, got #{property_value.class}" unless property_value.is_a?(expected_class)
+  
+    true
+  end  
 end
