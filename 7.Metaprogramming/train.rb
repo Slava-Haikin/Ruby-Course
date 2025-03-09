@@ -2,6 +2,8 @@
 
 # The Train class with mixed-in validation module.
 require_relative 'validation'
+require_relative '../6.Idiomatic_Ruby/instance_counter'
+require_relative '../6.Idiomatic_Ruby/manufacturer'
 
 class Train
   include InstanceCounter
