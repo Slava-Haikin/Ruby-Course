@@ -32,13 +32,13 @@ module Accessors
     end
   end
 
-  def strong_attr_accessor(_attr_name, _target_class)
-      define_method(_attr_name) { instance_variable_get("@#{_attr_name}") }
+  def strong_attr_accessor(attribute_name, target_class)
+    define_method(attribute_name) { instance_variable_get("@#{attribute_name}") }
 
-      define_method("#{_attr_name}=") do |value|
-        raise "Type mismatch: Expected #{_target_class}, got #{value.class}" unless value.is_a?(_target_class)
+    define_method("#{attribute_name}=") do |value|
+      raise "Type mismatch: Expected #{target_class}, got #{value.class}" unless value.is_a?(target_class)
 
-        instance_variable_set("@#{_attr_name}", value)
-      end
+      instance_variable_set("@#{attribute_name}", value)
+    end
   end
 end

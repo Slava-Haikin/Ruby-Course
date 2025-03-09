@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Accessors module provides a set of methods to mix in dynamic methods into other classes
+# Validate module provides a set of validate methods to check instance data
 
 # Содержит метод класса validate.
 # Этот метод принимает в качестве параметров имя проверяемого атрибута, а также тип валидации и
@@ -28,7 +28,27 @@
 # 5) Допустимо, что модуль не будет работать с наследниками.
 
 module Validation
-  def attr_accessor_with_history(*args); end
+  VALIDATOR_TYPES = %s(presence format type)
 
-  def strong_attr_accessor(attr_name, target_class); end
+  def self.extended(base)
+    base.instance_variable_set(:@validators, [])
+  end
+
+  def self.validate(_attr_name, validator, options = nil)
+    @validators << { attr_name: attr_name, validator: validator, options: options }
+  end
+
+  def validate!; end
+
+  private
+
+  def validate_presence(property_value)
+    raise 'Property value should be not empty or empty string' unless property_value && !property_value.empty?
+
+    true
+  end
+
+  def validate_format; end
+
+  def validate_type; end
 end
