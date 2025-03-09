@@ -27,19 +27,28 @@
 # 4) Все указанные валидаторы должны применяться к атрибуту
 # 5) Допустимо, что модуль не будет работать с наследниками.
 
-module Validation
-  VALIDATOR_TYPES = %s(presence format type)
+# frozen_string_literal: true
 
-  def self.extended(base)
-    base.instance_variable_set(:@validators, [])
+module Validation
+  VALIDATOR_TYPES = %i[presence format type].freeze
+
+  def self.included(base)
+    base.extend ClassMethods
   end
 
-  def validate(_attr_name, validator, option = nil)
-    @validators << { attr_name: attr_name, validator: validator, option: option }
+  module ClassMethods
+    def validate(attr_name, validator, option = nil)
+      @validators ||= []
+      @validators << { attr_name: attr_name, validator: validator, option: option }
+    end
+
+    def validators
+      @validators || []
+    end
   end
 
   def validate!
-    self.class.instance_variable_get(:@validators).each do |validator|
+    self.class.validators.each do |validator|
       value = instance_variable_get("@#{validator[:attr_name]}")
       case validator[:validator]
       when :presence then validate_presence(value)
@@ -58,23 +67,20 @@ module Validation
     false
   end
 
-  def validate_presence(property_value)
-    raise 'Property value should be not empty or empty string' if property_value.nil? || property_value.strip.empty?
+  private
 
-    true
+  def validate_presence(property_value)
+    raise 'Property value should not be nil or empty' if property_value.nil? || property_value.strip.empty?
   end
 
   def validate_format(property_value, format)
-    raise 'Property value should not be nil or empty string' if property_value.nil? || property_value.strip.empty?
+    raise 'Property value should not be nil or empty' if property_value.nil? || property_value.strip.empty?
     raise "Property value does not match format #{format}" unless property_value.match?(format)
-  
-    true
   end
 
   def validate_type(property_value, expected_class)
     raise 'Property value should not be nil' if property_value.nil?
     raise "Expected #{expected_class}, got #{property_value.class}" unless property_value.is_a?(expected_class)
-  
-    true
-  end  
+  end
 end
+
