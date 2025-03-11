@@ -13,6 +13,20 @@ puts train.number
 puts train.type
 
 # Sould not pass
-# wrong_train_number = ''
-# wrong_train_type = ''
-# trainee = Train.new(wrong_train_number, wrong_train_type)
+# CASE 1: Empty values
+begin
+  wrong_train_number = ''
+  wrong_train_type = ''
+  trainee = Train.new(wrong_train_number, wrong_train_type)
+rescue => e
+  puts e
+end
+
+# CASE 2: Wrong train number format
+begin
+  wrong_train_number = '2'
+  wrong_train_type = 'cargo'
+  trainee = Train.new(wrong_train_number, wrong_train_type)
+rescue => e
+  puts e
+end
